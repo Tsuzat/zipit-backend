@@ -26,4 +26,6 @@ func RountesInit() {
 
 	// Register Auth Routes
 	InitAuthRouter()
+	// Register Url Routes
+	InitUrlRouter()
 }

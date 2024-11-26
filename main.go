@@ -22,6 +22,14 @@ func main() {
 		log.Error("Error connecting to the database")
 		log.Error(err)
 	}
+	defer config.DB.Close()
+
+	// Connect to Redis
+	if err := db.InitRedis(); err != nil {
+		log.Error("Error connecting to Redis")
+		log.Error(err)
+	}
+	defer config.RDB.Close()
 
 	config.APP = fiber.New()
 	// Initialize the routes

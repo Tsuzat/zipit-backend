@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-pg/pg/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/redis/go-redis/v9"
 )
 
 // Environment variables
@@ -37,7 +38,7 @@ var (
 var (
 	REDIS_URL        string
 	REDIS_KEY_EXPIRY int
-	// RDB              *redis.Client
+	RDB              *redis.Client
 )
 
 /*
