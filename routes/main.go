@@ -11,9 +11,9 @@ func checkHealth(c *fiber.Ctx) error {
 	// Check if the database is connected
 	var isDatabase bool
 	if config.DB.Ping(context.Background()) != nil {
-		isDatabase = true
-	} else {
 		isDatabase = false
+	} else {
+		isDatabase = true
 	}
 	return c.Status(200).JSON(fiber.Map{
 		"status":   "ok",
