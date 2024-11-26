@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/Tsuzat/zipit-go-fiber/config"
+	"github.com/Tsuzat/zipit-go-fiber/db"
 	"github.com/Tsuzat/zipit-go-fiber/routes"
+	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/joho/godotenv"
 )
@@ -13,6 +15,12 @@ func main() {
 		log.Error("Error loading .env file")
 	}
 
+	// Connect to the database
+	if err := db.ConnectDB(); err != nil {
+		log.Error("Error connecting to the database")
+	}
+
+	config.APP = fiber.New()
 	// Initialize the routes
 	routes.RountesInit()
 
