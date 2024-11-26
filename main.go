@@ -15,9 +15,12 @@ func main() {
 		log.Error("Error loading .env file")
 	}
 
+	config.Init()
+
 	// Connect to the database
 	if err := db.ConnectDB(); err != nil {
 		log.Error("Error connecting to the database")
+		log.Error(err)
 	}
 
 	config.APP = fiber.New()

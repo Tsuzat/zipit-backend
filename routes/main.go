@@ -23,4 +23,7 @@ func checkHealth(c *fiber.Ctx) error {
 
 func RountesInit() {
 	config.APP.Get("/api/v1/healthcheck", checkHealth)
+
+	// Register Auth Routes
+	InitAuthRouter()
 }
