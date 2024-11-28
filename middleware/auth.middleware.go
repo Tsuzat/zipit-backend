@@ -55,7 +55,7 @@ func validateJWT(c *fiber.Ctx) error {
 		})
 	}
 	// Get the user from the database and attach it to the context so that we can use it in the route
-	id, email, name := claims["id"].(string), claims["email"].(string), claims["name"].(string)
+	id, email, name := int(claims["id"].(float64)), claims["email"].(string), claims["name"].(string)
 	user, err := db.GetUserByIdNameAndEmail(id, name, email)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(models.ApiError{

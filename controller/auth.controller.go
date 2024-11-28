@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -46,13 +47,14 @@ func SignUpUser(c *fiber.Ctx) error {
 			Error:   err,
 		})
 	}
-	if user != nil && len(user.Id) > 0 && user.IsVerified {
+	if user != nil && user.IsVerified {
+		// User already exists and is verified
 		return c.Status(fiber.StatusConflict).JSON(models.ApiError{
 			Status:  fiber.StatusConflict,
 			Message: "A verified account already exists with this email. Please log in.",
 			Error:   models.UserAlreadyExists,
 		})
-	} else if user != nil && len(user.Id) > 0 && !user.IsVerified {
+	} else if user != nil && !user.IsVerified {
 		// User already exists but is not verified
 		// so we update the user and send verification email
 		user.Password = req.Password
@@ -178,7 +180,7 @@ func LoginUser(c *fiber.Ctx) error {
 		Status:  fiber.StatusOK,
 		Message: "User login successful",
 		Data: models.UserLoginResponse{
-			Message: "User login successful with id: " + user.Id,
+			Message: fmt.Sprintf("User login successful with id: %d", user.Id),
 		},
 	})
 }
@@ -246,7 +248,7 @@ func RefreshToken(c *fiber.Ctx) error {
 			Message: "Could not parse the refresh token. Please relogin or refresh your access token",
 		})
 	}
-	userId := claims["id"].(string)
+	userId := int(claims["id"].(float64))
 	user, err := db.GetUserByIdNameAndEmail(userId, "", "")
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(models.ApiError{

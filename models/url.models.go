@@ -5,14 +5,13 @@ import (
 )
 
 type Url struct {
-	Id        string    `json:"id" pg:"id,pk,type:uuid,default:gen_random_uuid(),notnull"`
-	Url       string    `json:"url" pg:"url,notnull"`
-	Alias     string    `json:"alias" pg:"alias,notnull,unique"`
-	CreatedAt time.Time `json:"created_at" pg:"created_at,default:now()"`
-	UpdatedAt time.Time `json:"updated_at" pg:"updated_at,default:now()"`
-	ExpiresAt time.Time `json:"expires_at" pg:"expires_at,notnull"`
-	OwnerId   string    `json:"owner_id" pg:"owner_id,type:uuid,notnull"`
-	Owner     *User     `json:"owner" pg:"fk:owner_id,rel:has-one,on_delete:cascade"`
+	Id        int       `json:"id" pg:"id"`
+	Url       string    `json:"url" pg:"url"`
+	Alias     string    `json:"alias" pg:"alias"`
+	CreatedAt time.Time `json:"created_at" pg:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" pg:"updated_at"`
+	ExpiresAt time.Time `json:"expires_at" pg:"expires_at"`
+	Owner     int       `json:"owner" pg:"owner"`
 }
 
 type CreateUrlRequest struct {

@@ -2,6 +2,8 @@ package controller
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -56,8 +58,7 @@ func CreateUrl(c *fiber.Ctx) error {
 		Url:       req.Url,
 		Alias:     req.Alias,
 		ExpiresAt: time.Now().Add(time.Hour * 24 * 7),
-		OwnerId:   user.Id,
-		Owner:     user,
+		Owner:     user.Id,
 	}
 	if err := db.InsertUrl(url); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.ApiError{
@@ -66,9 +67,6 @@ func CreateUrl(c *fiber.Ctx) error {
 			Error:   err,
 		})
 	}
-
-	// Remove User from url
-	url.Owner = nil
 
 	return c.Status(fiber.StatusOK).JSON(models.ApiResponse{
 		Status:  fiber.StatusOK,
@@ -143,14 +141,15 @@ func Redirect(c *fiber.Ctx) error {
 }
 
 func UpdateUrl(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if id == "" {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiError{
 			Status:  fiber.StatusBadRequest,
-			Message: "Invalid request body",
+			Message: "Invalid Request URL. Please provide a valid id",
 			Error:   nil,
 		})
 	}
+
 	var req models.UpdateUrlRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiError{
@@ -183,7 +182,7 @@ func UpdateUrl(c *fiber.Ctx) error {
 	if url == nil {
 		return c.Status(fiber.StatusNotFound).JSON(models.ApiError{
 			Status:  fiber.StatusNotFound,
-			Message: "Url not found with id: " + id,
+			Message: fmt.Sprintf("Url not found with id: %d", id),
 			Error:   nil,
 		})
 	}
@@ -199,7 +198,6 @@ func UpdateUrl(c *fiber.Ctx) error {
 		})
 	}
 	// Make sure to remove the user from the url
-	url.Owner = nil
 	return c.Status(fiber.StatusOK).JSON(models.ApiResponse{
 		Status:  fiber.StatusOK,
 		Message: "Url updated successfully",
@@ -208,11 +206,11 @@ func UpdateUrl(c *fiber.Ctx) error {
 }
 
 func DeleteUrl(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if strings.Trim(id, " ") == "" {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiError{
 			Status:  fiber.StatusBadRequest,
-			Message: "Invalid request body",
+			Message: "Invalid Request URL. Please provide a valid id",
 			Error:   nil,
 		})
 	}
@@ -228,7 +226,7 @@ func DeleteUrl(c *fiber.Ctx) error {
 	}
 
 	// Make sure the user is the owner of the url
-	if url.OwnerId != c.Locals("user").(*models.User).Id {
+	if url.Owner != c.Locals("user").(*models.User).Id {
 		return c.Status(fiber.StatusUnauthorized).JSON(models.ApiError{
 			Status:  fiber.StatusUnauthorized,
 			Message: "Unauthorized",

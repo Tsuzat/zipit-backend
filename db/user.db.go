@@ -13,15 +13,12 @@ func GetUserByEmail(email string) (*models.User, error) {
 	if err := config.DB.Model(user).Where("email = ?", email).Select(); err != nil {
 		return nil, err
 	}
-	if user.Id == "" {
-		return nil, models.UserNotFound
-	}
 	return user, nil
 }
 
 func InsertUser(user *models.User) error {
 	_, err := config.DB.Model(user).Insert()
-	if err != nil || user.Id == "" {
+	if err != nil {
 		return err
 	}
 	log.Info("Created User with id: ", user.Id)
@@ -30,14 +27,14 @@ func InsertUser(user *models.User) error {
 
 func UpdateUser(user *models.User) error {
 	_, err := config.DB.Model(user).Where("id = ?", user.Id).Update()
-	if err != nil || user.Id == "" {
+	if err != nil {
 		return err
 	}
 	log.Info("Updated User with id: ", user.Id)
 	return nil
 }
 
-func GetUserByIdNameAndEmail(id, name, email string) (*models.User, error) {
+func GetUserByIdNameAndEmail(id int, name, email string) (*models.User, error) {
 	user := &models.User{
 		Id:    id,
 		Name:  name,
