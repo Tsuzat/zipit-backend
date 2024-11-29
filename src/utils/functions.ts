@@ -8,8 +8,16 @@ import {
   REFRESH_TOKEN_EXPIRY,
 } from "../constants";
 
-const randomSecret = (length: number = 36): string =>
-  crypto.randomBytes(length).toString("hex");
+const randomSecret = (length: number = 36): string => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  const charactersLength = characters.length;
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
 
 const getXMinutesFromNow = (x: number): Date => {
   const now = new Date();

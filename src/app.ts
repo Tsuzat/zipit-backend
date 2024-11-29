@@ -4,6 +4,7 @@ import cors from "cors";
 import { CROSS_ORIGIN } from "./constants";
 import { ApiResponse } from "./utils/apiResponse";
 import { authRouter } from "./routes/auth.routes";
+import { urlRouter } from "./routes/url.routes";
 
 const app = express();
 
@@ -31,5 +32,8 @@ app.get("/api/v1/healthcheck", (req, res) => {
 
 // Auth Routes
 app.use("/api/v1/auth", authRouter);
+
+// Url Routes
+app.use("/api/v1/url", urlRouter);
 
 export { app };

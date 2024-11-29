@@ -1,4 +1,3 @@
-import { error } from "console";
 import { User } from "../models/user.model";
 import db from "./db";
 import { users } from "./schemas";
