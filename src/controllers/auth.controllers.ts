@@ -119,3 +119,13 @@ export const verifyEmail = asyncHandler(async (req, res, next) => {
     throw new ApiError(500, "Error Updating User");
   }
 });
+
+export const Me = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+  if (!user) throw new ApiError(401, "Unauthorized Access");
+  res.status(200).json(
+    new ApiResponse(200, "User Data", {
+      id: user.id,
+    })
+  );
+});
