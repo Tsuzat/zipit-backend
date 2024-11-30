@@ -14,4 +14,5 @@ func InitUrlRouter() {
 	group.Get("/r/:alias", controller.Redirect)
 	group.Patch("/:id", middleware.Authenticate, controller.UpdateUrl)
 	group.Delete("/:id", middleware.Authenticate, controller.DeleteUrl)
+	group.Get("/count", middleware.Authenticate, controller.CountUrls)
 }

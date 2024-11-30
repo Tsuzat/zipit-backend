@@ -250,3 +250,20 @@ func DeleteUrl(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func CountUrls(c *fiber.Ctx) error {
+	user := c.Locals("user").(*models.User)
+	count, err := db.CountUrlsByOwnerId(user.Id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.ApiError{
+			Status:  fiber.StatusInternalServerError,
+			Message: "An unexpected error occurred. Please try again later.",
+			Error:   err,
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(models.ApiResponse{
+		Status:  fiber.StatusOK,
+		Message: "Urls count fetched successfully",
+		Data:    count,
+	})
+}

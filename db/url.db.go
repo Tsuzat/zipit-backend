@@ -62,3 +62,7 @@ func GetUrlsByOwnerId(owner int) ([]models.Url, error) {
 	}
 	return urls, nil
 }
+
+func CountUrlsByOwnerId(owner int) (int, error) {
+	return config.DB.Model((*models.Url)(nil)).Where("owner = ?", owner).Count()
+}
