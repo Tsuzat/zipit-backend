@@ -1,4 +1,5 @@
 import {
+  countUrlsByUser,
   findUrlByAlias,
   getAllUrlsByUser,
   insertUrl,
@@ -48,4 +49,10 @@ export const getAllUrls = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const urls = await getAllUrlsByUser(userId);
   res.status(200).json({ message: "URLs retrieved successfully", urls });
+});
+
+export const countUrls = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+  const count = await countUrlsByUser(userId);
+  res.status(200).json({ message: "Count retrieved successfully", count });
 });

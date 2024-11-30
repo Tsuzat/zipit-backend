@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 import "../models/url.model";
 import db from "./db";
 import { urls } from "./schemas";
@@ -43,4 +43,18 @@ export const deleteUrl = async (id: number): Promise<boolean> => {
 export const getAllUrlsByUser = async (userId: number): Promise<Url[]> => {
   const query = db.select().from(urls).where(eq(urls.owner, userId));
   return await query;
+};
+
+export const countUrlsByUser = async (userId: number): Promise<number> => {
+  const result = await db
+    .select({ value: count() })
+    .from(urls)
+    .where(eq(urls.owner, userId));
+  if (result.length === 0) {
+    return 0;
+  }
+  if (result.length === 0) {
+    return 0;
+  }
+  return result[0].value;
 };
